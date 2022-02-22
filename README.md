@@ -7,6 +7,7 @@ A simple multi feature ToDo web application using Django
 
 
 Run migrate command to create tables in Sqlite3 Database
+
 3. python manage.py migrate
 
 
