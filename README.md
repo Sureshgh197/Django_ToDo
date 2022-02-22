@@ -12,4 +12,5 @@ Run migrate command to create tables in Sqlite3 Database
 
 
 Test the App
+
 4. python manage.py runserver
