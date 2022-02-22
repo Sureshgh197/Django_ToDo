@@ -1,0 +1,56 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style>
+    #ds{
+padding: 40px;
+    }
+    </style>
+</head>
+<body>
+   
+    <form action="../update_data" method="post">
+        {% csrf_token %}
+    <table border="3" class="table table-responsive  table-hover ">
+        <thead class="bg-success">
+            <tr>
+                <td>Id</td>
+                <td>Task Name</td>
+                <td>Task Description</td>
+                <td>Task Category</td>
+                <td>Task Due date</td>
+                <td>Task Priority</td>
+                <td>Status</td>
+            </tr>
+        </thead>
+        <tbody>
+        <tr><td><input type="hidden" name="id" value="{{obj.id}}"></td>
+            <td><input type="text" name="name" value="{{obj.name}}"></td>
+            <td><input type="textarea" name="description" value="{{obj.description}}"></td>
+            <td><select name="category" id="">
+                {% for i in obj2 %}
+                <option value="{{i.name}}">{{i.name}}</option>
+                {% endfor %}</td>
+            <td><input type="datetime-local" name="due_date" value="{{obj.due_date|date:'m/d/Y h i A'}}"><br>
+            Due date is {{obj.due_date|date:'m/d/Y h i A'}}</td>
+
+            <td>{% if obj.priority == 'Low' %}<input type="radio" name="priority" value="{{obj.priority}}" checked>{% else %}<input type="radio" name="priority" value="Low">{% endif %}
+                <label for="html">Low</label><br>
+                {% if obj.priority == 'Medium' %}<input type="radio" name="priority" value="{{obj.priority}}" checked>{% else %}<input type="radio" name="priority" value="Medium">{% endif %}
+                <label for="html">Medium</label><br>
+                {% if obj.priority == 'Hard' %}<input type="radio" name="priority" value="{{obj.priority}}" checked>{% else %}<input type="radio" name="priority" value="Hard">{% endif %}
+                <label for="css">Hard</label></td>
+            <td>{% if obj.status == True %}<input type="checkbox" name="status" checked>{% else %}<input type="checkbox" name="status" >{% endif %}</td></tr>
+              </tbody>
+    </table>
+    <input class="btn btn-success" type="submit" value="update">
+</form>
+
+</body>
+</html>

@@ -1,0 +1,155 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archieves</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="navbar nav">
+            <li><a href="/">ToDo</a></li>
+            
+        </div>
+    </div>
+    <div class="container">
+        <div class="jumbotron text-center" id="ds">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-8"><h1>Archieves</h1></div>
+                    <!-- <div class="controls"> -->
+                        <div class="col-sm-4"><a class=" btn btn-primary" id="restoreURL" >Restore Selected</a></div>
+                        <br><br>
+                        <div class="col-sm-4"><a class=" btn btn-danger" id="list" >Delete</a></div>
+                    <!-- </div> -->
+                </div>
+            </div>
+                
+                <div class="row justify-content-center">
+                    <div class="col-auto">
+            <table border="3" class="table table-responsive  main-table">
+                <thead class="bg-success">
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>Id</td>
+                        <td>Task Name</td>
+                        <td>Task Description</td>
+                        <td>Task Category</td>
+                        <td>Task Due date</td>
+                        <td>Task Priority</td>
+                        <td>Status</td>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for i in obj %}
+                {% if i.status == False %}
+                <!-- <tr class="tr" onclick="javascript:showRow(this);"> -->
+                    <tr class="tr">
+                    <td ><input type="checkbox"></td>
+                    <td class="id">{{ i.idd }}</td>
+                    <td>{{ i.name }}</td>
+                    <td>{{i.description}}</td>
+                    <td>{{i.category.name}}</td>
+                    <td>{{i.due_date}}</td>
+                    <td>{{i.priority}}</td>
+                    <td>{{i.status|yesno:"Completed,Incomplete"}}</td>
+                </tr>
+                {% else %}
+                <tr class="tr" >
+                    <td><input type="checkbox"></td>
+                    <td class="id">{{ i.idd }}</td>
+                    <td>{{ i.name }}</td>
+                    <td>{{i.description}}</td>
+                    <td>{{i.category.name}}</td>
+                    <td>{{i.due_date}}</td>
+                    <td>{{i.priority}}</td>
+                    <td>{{i.status|yesno:"Completed,Incomplete"}}</td>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+            </table>
+            </div>
+        </div>
+        </div>
+    </div>
+    <script>
+          $(document).ready(function() {
+            $("#list").hide();
+        $("#restoreURL").hide();
+    $('.main-table tr').click(function(event) {
+        if (event.target.type !== 'checkbox') {
+            $(':checkbox', this).trigger('click');}
+     });
+});
+
+$("#list").click(function(){
+    
+    var ids = grabIDs();
+    $.ajax({
+        
+        type: 'GET',
+        url: 'rlistDelete',
+        data: {"ids[]":ids},
+        success: function(response){
+            return;
+        }
+    });
+
+
+});
+
+function grabIDs(){
+    var arr = new Array();
+    // var obj = JSON.parse(myJSON);
+$('.main-table tr').each(function() {
+
+    var isChecked = $(this).find('input[type="checkbox"').is(":checked");
+    
+    if (isChecked) {
+            arr.push($(this).children('.id').text());
+
+                    }
+
+});
+return arr;
+
+}
+
+$(document).ready(function(){
+    var $checkboxes=$('input[type="checkbox"]');
+    
+    $checkboxes.change(function(){
+                
+        var count=$checkboxes.filter(':checked').length;
+    //   console.log(count)
+        if(count==1){
+            $("#restoreURL").show();
+            $("#list").show();
+        var id = $('input[type="checkbox"]').filter(':checked').closest("tr").find('.id').text();
+        restoreURL="/"+id;
+        // deleteCompleteURL="http://127.0.0.1:8000//deleteComplete/"+id;
+        document.getElementById("restoreURL").setAttribute("href",restoreURL);
+        // document.getElementById("deleteCompleteURL").setAttribute("href",deleteCompleteURL);
+        }
+        else if(count>1){
+                $("#list").show();
+                $("#restoreURL").hide();
+                // var selrow = getRow();
+
+        }
+        else{
+            $("#list").hide();
+            $("#restoreURL").hide();
+        }
+    })
+});
+
+$(document).ajaxStop(function(){
+    window.location.reload();
+});
+    </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div>
+       
+    <h2>Category Name:</h2>
+    {% csrf_token %}
+    <input type="text" id="cat_name" name="cat_name">
+    <button id="sub">Add</button>
+    </div>
+    <script>
+        
+        $("#sub").click(function(){
+   var cat = jQuery("[name=cat_name]").val(); 
+   var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+
+   function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            // if not safe, set csrftoken
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+    $.ajax({        
+        type: 'POST',
+        url: './cat_add',
+        data: {"cat":cat},
+        success: function(response){
+             window.close();
+        }
+    });
+
+});
+    </script>
+</body>
+</html>
